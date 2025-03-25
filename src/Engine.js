@@ -5,8 +5,10 @@ export default class Engine {
         if (!this.gl) throw new Error('WebGL not supported')
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.depthFunc(this.gl.LESS)
+        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true)
 
         this.meshes = []
+        this.textures = new Map()
         this.buffers = new Map()
     }
 
@@ -127,5 +129,62 @@ export default class Engine {
             )
         }
         return shader
+    }
+
+    loadTexture(key, url) {
+        const texture = this.gl.createTexture()
+        this.gl.bindTexture(this.gl.TEXTURE_2D, texture)
+
+        this.gl.texImage2D(
+            this.gl.TEXTURE_2D,
+            0,
+            this.gl.RGBA,
+            1,
+            1,
+            0,
+            this.gl.RGBA,
+            this.gl.UNSIGNED_BYTE,
+            new Uint8Array([0, 0, 0, 255])
+        )
+
+        const image = new Image()
+        image.onload = () => {
+            this.gl.bindTexture(this.gl.TEXTURE_2D, texture)
+            this.gl.texImage2D(
+                this.gl.TEXTURE_2D,
+                0,
+                this.gl.RGBA,
+                this.gl.RGBA,
+                this.gl.UNSIGNED_BYTE,
+                image
+            )
+
+            if (this.isPowerOf2(image.width) && this.isPowerOf2(image.height)) {
+                this.gl.generateMipmap(this.gl.TEXTURE_2D)
+            } else {
+                this.gl.texParameteri(
+                    this.gl.TEXTURE_2D,
+                    this.gl.TEXTURE_WRAP_S,
+                    this.gl.CLAMP_TO_EDGE
+                )
+                this.gl.texParameteri(
+                    this.gl.TEXTURE_2D,
+                    this.gl.TEXTURE_WRAP_T,
+                    this.gl.CLAMP_TO_EDGE
+                )
+                this.gl.texParameteri(
+                    this.gl.TEXTURE_2D,
+                    this.gl.TEXTURE_MIN_FILTER,
+                    this.gl.LINEAR
+                )
+            }
+        }
+        image.src = url
+
+        this.textures.set(key, texture)
+    }
+
+    isPowerOf2(value) {
+        return (value & (value - 1)) === 0
     }
 }

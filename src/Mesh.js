@@ -1,5 +1,5 @@
 export default class Mesh {
-    constructor(engine, name, x = 0, y = 0, z = 0) {
+    constructor(engine, name, x = 0, y = 0, z = 0, texture = null) {
         this.engine = engine
         this.gl = this.engine.gl
         this.shaderProgram = this.engine.shaderProgram
@@ -12,6 +12,7 @@ export default class Mesh {
         this.vertices = null
         this.indices = null
         this.uvs = null
+        this.texture = texture
 
         this.modelMatrix = mat4.create()
         this.initData()
@@ -30,6 +31,24 @@ export default class Mesh {
             'uModelMatrix'
         )
         this.gl.uniformMatrix4fv(modelMatrixLocation, false, this.modelMatrix)
+
+        if (this.texture) {
+            this.gl.activeTexture(this.gl.TEXTURE0)
+            this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture)
+            this.gl.uniform1i(
+                this.gl.getUniformLocation(this.shaderProgram, 'uSampler'),
+                0
+            )
+            this.gl.uniform1i(
+                this.gl.getUniformLocation(this.shaderProgram, 'uTextured'),
+                true
+            )
+        } else {
+            this.gl.uniform1i(
+                this.gl.getUniformLocation(this.shaderProgram, 'uTextured'),
+                false
+            )
+        }
 
         this.updateBuffers()
     }

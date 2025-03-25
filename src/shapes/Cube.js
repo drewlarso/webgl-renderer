@@ -1,8 +1,8 @@
-import Mesh from './Mesh.js'
+import Mesh from '../Mesh.js'
 
-export default class Other extends Mesh {
+export default class Cube extends Mesh {
     constructor(engine, x, y, z) {
-        super(engine, 'Other', x, y, z)
+        super(engine, 'Cube', x, y, z)
     }
 
     render(dt) {
@@ -16,42 +16,17 @@ export default class Other extends Mesh {
     initData() {
         this.vertices = new Float32Array([
             // Front face
-            -1.0,
-            -1.0,
-            ,
-            -1.0,
-            1.0,
-            -1.0,
-            1.0,
-            -1.0,
-            -1.0,
-            1.0,
+            -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0,
+            // Back face
+            -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
+            // Top face
+            -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0,
+            // Bottom face
+            -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
             // Right face
-            1.0,
-            -1.0,
-            -1.0,
-            1.0,
-            1.0,
-            -1.0,
-            1.0,
-            1.0,
-            1.0,
-            1.0,
-            -1.0,
-            1.0,
+            1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0,
             // Left face
-            -1.0,
-            -1.0,
-            -1.0,
-            -1.0,
-            -1.0,
-            1.0,
-            -1.0,
-            1.0,
-            1.0,
-            -1.0,
-            1.0,
-            -1.0,
+            -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0,
         ])
 
         this.indices = new Uint16Array([
