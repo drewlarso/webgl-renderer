@@ -4,7 +4,7 @@ export default class Empty extends Mesh {
     constructor(
         engine,
         textureKey = '',
-        vertices = null,
+        vertices,
         indices = null,
         uvs = null,
         x = 0,
@@ -12,15 +12,14 @@ export default class Empty extends Mesh {
         z = 0
     ) {
         super(engine, 'Empty', x, y, z, engine.textures.get(textureKey))
-        this.vertices = new Float32Array(vertices)
+        if (vertices) this.vertices = new Float32Array(vertices)
         if (indices) this.indices = new Uint16Array(indices)
         if (uvs) this.uvs = new Float32Array(uvs)
+        this.updateBuffers()
     }
 
     render(dt) {
         super.render(dt)
-
-        this.rotation[1] += 0.5 * dt
     }
 
     initData() {}

@@ -5,9 +5,9 @@ export default class Mesh {
         this.shaderProgram = this.engine.shaderProgram
         this.name = name
 
-        this.position = [x, y, z]
-        this.rotation = [0, 0, 0]
-        this.scale = [1, 1, 1]
+        this.position = { x, y, z }
+        this.rotation = { x: 0, y: 0, z: 0 }
+        this.scale = { x: 1, y: 1, z: 1 }
 
         this.vertices = null
         this.indices = null
@@ -21,11 +21,19 @@ export default class Mesh {
 
     update(dt) {
         mat4.identity(this.modelMatrix)
-        mat4.translate(this.modelMatrix, this.modelMatrix, this.position)
-        mat4.rotateX(this.modelMatrix, this.modelMatrix, this.rotation[0])
-        mat4.rotateY(this.modelMatrix, this.modelMatrix, this.rotation[1])
-        mat4.rotateZ(this.modelMatrix, this.modelMatrix, this.rotation[2])
-        mat4.scale(this.modelMatrix, this.modelMatrix, this.scale)
+        mat4.translate(this.modelMatrix, this.modelMatrix, [
+            this.position.x,
+            this.position.y,
+            this.position.z,
+        ])
+        mat4.rotateX(this.modelMatrix, this.modelMatrix, this.rotation.x)
+        mat4.rotateY(this.modelMatrix, this.modelMatrix, this.rotation.y)
+        mat4.rotateZ(this.modelMatrix, this.modelMatrix, this.rotation.z)
+        mat4.scale(this.modelMatrix, this.modelMatrix, [
+            this.scale.x,
+            this.scale.y,
+            this.scale.z,
+        ])
         const modelMatrixLocation = this.gl.getUniformLocation(
             this.shaderProgram,
             'uModelMatrix'

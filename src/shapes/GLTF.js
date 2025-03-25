@@ -1,14 +1,18 @@
 import Empty from './Empty.js'
 
 export default class GLTF {
-    constructor(engine, url, textureKey, x, y, z) {
+    constructor(engine, url, textureKey, x = 0, y = 0, z = 0) {
         this.engine = engine
         this.url = url
         this.textureKey = textureKey
 
-        this.position = [0, 0, 0]
-        this.rotation = [0, 0, 0]
-        this.scale = [1, 1, 1]
+        this.position = {
+            x,
+            y,
+            z,
+        }
+        this.rotation = { x: 0, y: 0, z: 0 }
+        this.scale = { x: 1, y: 1, z: 1 }
 
         this.meshes = []
         this.buffers = []
@@ -30,27 +34,6 @@ export default class GLTF {
         for (const mesh of this.meshes) {
             mesh.position = position
             mesh.rotation = rotation
-            mesh.scale = scale
-        }
-    }
-
-    setPosition(position) {
-        this.position = position
-        for (const mesh of this.meshes) {
-            mesh.position = position
-        }
-    }
-
-    setRotation(rotation) {
-        this.rotation = rotation
-        for (const mesh of this.meshes) {
-            mesh.rotation = rotation
-        }
-    }
-
-    setScale(scale) {
-        this.scale = scale
-        for (const mesh of this.meshes) {
             mesh.scale = scale
         }
     }

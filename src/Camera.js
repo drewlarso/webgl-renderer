@@ -1,5 +1,5 @@
 export default class Camera {
-    constructor(position = [2, 0, 0], lookAt = [0, 0, 0], up = [0, 0, 1]) {
+    constructor(position = [0, 1, 0], lookAt = [0, 0, 0], up = [0, 1, 0]) {
         this.position = position
         this.lookAt = lookAt
         this.up = up
