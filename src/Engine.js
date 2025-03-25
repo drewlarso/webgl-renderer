@@ -3,6 +3,11 @@ export default class Engine {
         this.canvas = document.querySelector('#glcanvas')
         this.gl = this.canvas.getContext('webgl')
         if (!this.gl) throw new Error('WebGL not supported')
+        this.gl.enable(this.gl.DEPTH_TEST)
+        this.gl.depthFunc(this.gl.LESS)
+
+        this.meshes = []
+        this.buffers = new Map()
     }
 
     async init() {
@@ -14,19 +19,61 @@ export default class Engine {
         this.shaderProgram = this.initShaderProgram(vsSource, fsSource)
         this.gl.useProgram(this.shaderProgram)
 
+        addEventListener('resize', this.resize.bind(this))
+        this.resize()
         this.initMatrices()
+        this.render()
+    }
+
+    resize() {
+        this.canvas.width = this.canvas.clientWidth
+        this.canvas.height = this.canvas.clientHeight
+        this.gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+        this.initMatrices()
+    }
+
+    addMesh(mesh) {
+        this.meshes.push(mesh)
     }
 
     clear() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     }
 
+    render() {
+        let previousTimestamp = 0
+        const renderLoop = (timestamp) => {
+            const dt = (timestamp - previousTimestamp) / 1000
+            previousTimestamp = timestamp
+
+            this.clear()
+
+            for (const mesh of this.meshes) {
+                if (mesh.render) mesh.render(dt)
+            }
+
+            requestAnimationFrame(renderLoop)
+        }
+        requestAnimationFrame(renderLoop)
+    }
+
     initMatrices() {
         this.projectionViewMatrix = mat4.create()
-        mat4.perspective(this.projectionViewMatrix, Math.PI / 2, 1, 100) // matrix, fov, near, far
+        mat4.perspective(
+            this.projectionViewMatrix,
+            Math.PI / 2,
+            this.canvas.width / this.canvas.height,
+            1,
+            100
+        ) // matrix, fov, aspect, near, far
 
         const lookAtMatrix = mat4.create()
-        mat4.lookAt(lookAtMatrix, [1, 1, 1], [0, 0, 0], [0, 0, 1]) // eye, at, up
+        mat4.lookAt(lookAtMatrix, [0, -6, 2], [0, 0, 0], [0, 0, 1]) // eye, at, up
+        mat4.multiply(
+            this.projectionViewMatrix,
+            this.projectionViewMatrix,
+            lookAtMatrix
+        )
 
         this.gl.uniformMatrix4fv(
             this.gl.getUniformLocation(

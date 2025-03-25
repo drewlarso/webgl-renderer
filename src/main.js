@@ -1,8 +1,9 @@
 import Cube from './Cube.js'
 import Engine from './Engine.js'
-import Mesh from './Mesh.js'
+import Other from './Other.js'
 
 const engine = new Engine()
-engine.init()
+await engine.init()
 
-const cube = new Cube()
+engine.addMesh(new Cube(engine))
+engine.addMesh(new Other(engine, 4))
