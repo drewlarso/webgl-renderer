@@ -1,11 +1,12 @@
 export default class Engine {
-    constructor() {
+    constructor(camera) {
         this.canvas = document.querySelector('#glcanvas')
         this.gl = this.canvas.getContext('webgl')
         if (!this.gl) throw new Error('WebGL not supported')
         this.gl.enable(this.gl.DEPTH_TEST)
         this.gl.depthFunc(this.gl.LESS)
-        this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true)
+        // this.gl.pixelStorei(this.gl.UNPACK_FLIP_Y_WEBGL, true)
+        this.camera = camera
 
         this.meshes = []
         this.textures = new Map()
@@ -13,7 +14,7 @@ export default class Engine {
     }
 
     async init() {
-        this.gl.clearColor(0.1, 0.0, 0.3, 1.0)
+        this.gl.clearColor(0.2, 0.1, 0.5, 1.0)
         this.clear()
 
         const vsSource = await (await fetch('src/shaders/debug.vs')).text()
@@ -42,21 +43,11 @@ export default class Engine {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
     }
 
-    render() {
-        let previousTimestamp = 0
-        const renderLoop = (timestamp) => {
-            const dt = (timestamp - previousTimestamp) / 1000
-            previousTimestamp = timestamp
-
-            this.clear()
-
-            for (const mesh of this.meshes) {
-                if (mesh.render) mesh.render(dt)
-            }
-
-            requestAnimationFrame(renderLoop)
+    render(dt) {
+        this.clear()
+        for (const mesh of this.meshes) {
+            if (mesh.render) mesh.render(dt)
         }
-        requestAnimationFrame(renderLoop)
     }
 
     initMatrices() {
@@ -65,12 +56,17 @@ export default class Engine {
             this.projectionViewMatrix,
             Math.PI / 2,
             this.canvas.width / this.canvas.height,
-            1,
-            100
+            this.camera.near,
+            this.camera.far
         ) // matrix, fov, aspect, near, far
 
         const lookAtMatrix = mat4.create()
-        mat4.lookAt(lookAtMatrix, [0, -6, 2], [0, 0, 0], [0, 0, 1]) // eye, at, up
+        mat4.lookAt(
+            lookAtMatrix,
+            this.camera.position,
+            this.camera.lookAt,
+            this.camera.up
+        ) // eye, at, up
         mat4.multiply(
             this.projectionViewMatrix,
             this.projectionViewMatrix,

@@ -1,30 +1,25 @@
 import Cube from './shapes/Cube.js'
 import Engine from './Engine.js'
-import TexturedQuad from './shapes/TexturedQuad.js'
-import { loadGLTF } from './shapes/parse.js'
-import Empty from './shapes/Empty.js'
+import GLTF from './shapes/GLTF.js'
+import Camera from './shaders/Camera.js'
 
-const engine = new Engine()
+const camera = new Camera([2, 1, 0], [0, 1, 0], [0, 1, 0])
+const engine = new Engine(camera)
 await engine.init()
 
-// engine.loadTexture('debug', 'public/debug.png')
-// engine.loadTexture('creeper', 'public/creeper.png')
 engine.loadTexture('cipher', 'public/colors.png')
 
-// engine.addMesh(new Cube(engine))
-// engine.addMesh(new TexturedQuad(engine, 'debug', 3))
-// engine.addMesh(new TexturedQuad(engine, 'creeper', -3))
+const cipher = new GLTF(engine, 'public/cipher.gltf', 'cipher')
+await cipher.init()
 
-// need to put in texture key manually for now
-// await cipher.loadModel('public/cipher.gltf')
-// engine.addMesh(new GLTF(engine, 'public/cipher.gltf', 'cipher'))
+let previousTimestamp = 0
+const renderLoop = (timestamp) => {
+    const dt = (timestamp - previousTimestamp) / 1000
+    previousTimestamp = timestamp
 
-const model = await loadGLTF('public/cipher.gltf')
-const cipher = new Empty(
-    engine,
-    'cipher',
-    model.vertices,
-    model.indices,
-    model.uvs
-)
-engine.addMesh(cipher)
+    engine.render(dt)
+
+    requestAnimationFrame(renderLoop)
+}
+
+requestAnimationFrame(renderLoop)

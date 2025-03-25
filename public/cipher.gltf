@@ -391,9 +391,9 @@
 		{
 			"bufferView":24,
 			"componentType":5126,
-			"count":96,
+			"count":186,
 			"max":[
-				0.09658409655094147,
+				0.10399044305086136,
 				1.316190242767334,
 				0.11587762832641602
 			],
@@ -407,19 +407,19 @@
 		{
 			"bufferView":25,
 			"componentType":5126,
-			"count":96,
+			"count":186,
 			"type":"VEC3"
 		},
 		{
 			"bufferView":26,
 			"componentType":5126,
-			"count":96,
+			"count":186,
 			"type":"VEC2"
 		},
 		{
 			"bufferView":27,
 			"componentType":5123,
-			"count":144,
+			"count":282,
 			"type":"SCALAR"
 		}
 	],
@@ -570,26 +570,26 @@
 		},
 		{
 			"buffer":0,
-			"byteLength":1152,
+			"byteLength":2232,
 			"byteOffset":110684,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":1152,
-			"byteOffset":111836,
+			"byteLength":2232,
+			"byteOffset":112916,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":768,
-			"byteOffset":112988,
+			"byteLength":1488,
+			"byteOffset":115148,
 			"target":34962
 		},
 		{
 			"buffer":0,
-			"byteLength":288,
-			"byteOffset":113756,
+			"byteLength":564,
+			"byteOffset":116636,
 			"target":34963
 		}
 	],
@@ -601,7 +601,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":114044,
+			"byteLength":117200,
 			"uri":"cipher.bin"
 		}
 	]

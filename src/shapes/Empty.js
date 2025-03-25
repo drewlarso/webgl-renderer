@@ -20,7 +20,7 @@ export default class Empty extends Mesh {
     render(dt) {
         super.render(dt)
 
-        this.rotation[2] += 0.01
+        this.rotation[1] += 0.5 * dt
     }
 
     initData() {}
